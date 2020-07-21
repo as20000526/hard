@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spingarr">
+        <item>全部</item>
+        <item>雷射</item>
+        <item>NCT</item>
+        <item>P2</item>
+        <item>沖床</item>
+        <item>點焊</item>
+        <item>塗裝</item>
+        <item>裝配</item>
+    </string-array>
+</resources>

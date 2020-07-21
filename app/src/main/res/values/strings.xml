@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">hard</string>
+    <string name="base_url">http://10.1.1.71:8000/api/</string>
+</resources>
