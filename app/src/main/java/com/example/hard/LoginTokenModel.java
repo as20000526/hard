@@ -16,20 +16,21 @@ public class LoginTokenModel {
     private String token;
     private String routing_level;
     private String message;
+    private String org_id;
 //    private List so_id =new ArrayList<>();
     private  String so_id;
 
-    public LoginTokenModel(int status, String token) {
+    public LoginTokenModel(int status, String token,String org_id) {
         this.status=status;
         this.token=token;
         this.message=message;
-        this.so_id=so_id;
+        this.org_id=org_id;
     }
 
     public int getStatus() {
         return status;
     }
-
+    public  String  getorg_id(){return org_id;}
     public void setStatus(int status) {
         this.status = status;
     }

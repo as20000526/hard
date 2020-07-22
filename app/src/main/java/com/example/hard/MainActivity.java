@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText account, password;
     private Button button;
     ApiService apiService;
-    private String user,pw,token;
+    private String user,pw,token,org_id;
     private int status=1;
     Observable  observable;
     @Override
@@ -80,11 +80,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //token=response.body().getToken();
                     try{
                     token=response.body().getToken();
+                    org_id=response.body().getorg_id();
                      SharedPreferences sharedPreferences = getSharedPreferences("data", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("name", token);
+                        editor.putString("token", token);
+                        editor.putString("org_id",org_id);
                         editor.commit();
-                     response.body().getToken();
                     status=response.body().getStatus();}
                     catch (Exception e){
                         Toast.makeText(getApplicationContext(), "帳密錯誤", Toast.LENGTH_SHORT).show();
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         status=1;
                     Intent login=new Intent(MainActivity.this,Main.class);
                     startActivity(login);
-                        Log.d("123", "onResponse: "+token);}
+                        Log.d("123", "onResponse: "+token); }
                 }
 //                    Observer<String> observer = new Observer<String>() {
 //

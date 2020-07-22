@@ -1,16 +1,20 @@
 package com.example.hard;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -32,34 +36,37 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Search_activity extends AppCompatActivity implements View.OnClickListener {
-    private Button online_date,online_number,online_customer,manufacture,checked;
+    private Button online_datebt,online_number,online_customer,manufacturebt,checked;
     private EditText data,ednumber,edcustomer,mo_idte;
     private ApiService apiService;
-    private String token,so_id="",customer_name="",mo_id="";
+    private Spinner spingarr;
+    private String token,org_id,so_id="",customer_name="",mo_id="",routing_level="";
+    private String customer,sale_order,manufacture,online_date;
     List<LoginModel> number =new ArrayList<>();
     List<LoginModel> on_customer =new ArrayList<>();
     List<LoginModel> facture =new ArrayList<>();
-    AlertDialog.Builder dialog_list;
-    Spinner spingarr;
+    private RecyclerView recyclerView_list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_activity);
-        dialog_list = new AlertDialog.Builder(Search_activity.this,0);
-        online_date=findViewById(R.id.online_date);
+        recyclerView_list=findViewById(R.id.recyclerView);
+        spingarr=findViewById(R.id.made_spinner);
+        online_datebt=findViewById(R.id.online_date);
         online_number=findViewById(R.id.online_number);
         online_customer=findViewById(R.id.online_customer);
-        manufacture=findViewById(R.id.manufacture);
+        manufacturebt=findViewById(R.id.manufacture);
         checked=findViewById(R.id.checked);
         ednumber=findViewById(R.id.editText2);
         edcustomer=findViewById(R.id.editText3);
         mo_idte=findViewById(R.id.mo_id);
         data =  findViewById(R.id.data);
-        online_date.setOnClickListener(this);
+
+        online_datebt.setOnClickListener(this);
         online_number.setOnClickListener(this);
         online_customer.setOnClickListener(this);
-        manufacture.setOnClickListener(this);
+        manufacturebt.setOnClickListener(this);
         checked.setOnClickListener(this);
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create()) // 使用 Gson 解析
@@ -67,10 +74,41 @@ public class Search_activity extends AppCompatActivity implements View.OnClickLi
                 .build();
         apiService= retrofit.create(ApiService.class);
         SharedPreferences sharedPreferences= getSharedPreferences("data", Context .MODE_PRIVATE);
-        token=sharedPreferences.getString("name","");
+        token=sharedPreferences.getString("token","");
+        org_id=sharedPreferences.getString("org_id","");
 
+        ArrayAdapter<CharSequence> nAdapter = ArrayAdapter.createFromResource(
+                this, R.array.spingarr, android.R.layout.simple_spinner_item );
+        spingarr.setAdapter(nAdapter);
+        nAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        spingarr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                routing_level="";
+                if(i==1){
+                    routing_level="11";
+                }
+                else if(i==2){
+                    routing_level="12";}
+                else if(i==3){
+                    routing_level="13";}
+                else if(i==4){
+                    routing_level="20";}
+                else if(i==5){
+                    routing_level="30";}
+                else if(i==6){
+                    routing_level="40";}
+                else if(i==7){
+                    routing_level="50";}
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
+
 
     @Override
 public void onClick(View view) {
@@ -104,6 +142,7 @@ private void gotodata(){
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 // TODO Auto-generated method stub
                data.setText(year+"/"+(monthOfYear+1)+"/"+dayOfMonth);
+               online_date=year+"/"+(monthOfYear+1)+"/"+dayOfMonth;
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
 
@@ -121,14 +160,15 @@ private void gotonumber(){
                        test.add(zzz.getSo_id());
                    }
 
-                   dialog_list.setItems(test.toArray(new String[number.size()]), new DialogInterface.OnClickListener() {
+                   recyclerView_list.setItems(test.toArray(new String[number.size()]), new DialogInterface.OnClickListener() {
                        @Override
                        public void onClick(DialogInterface dialogInterface, int i) {
                            ednumber.setText(number.get(i).getSo_id());
+                           sale_order=number.get(i).getSo_id();
                        }
                    });
 
-                   dialog_list.create().show();
+
                    test.clear();
 
                }
@@ -160,6 +200,7 @@ private void gotocustomer(){
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             edcustomer.setText(on_customer.get(i).getcustomer_name());
+                            customer=on_customer.get(i).getcustomer_name();
 //                        Toast.makeText(Search_activity.this, "你選的是" + number.get(i).getSo_id(), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -191,6 +232,7 @@ private void gotomo_id(){
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mo_idte.setText(facture.get(i).getmo_id());
+                        manufacture=facture.get(i).getmo_id();
 //                        Toast.makeText(Search_activity.this, "你選的是" + number.get(i).getSo_id(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -209,7 +251,16 @@ private void gotomo_id(){
 
 private void gotonext(){
 
-
-
+    Intent menu=new Intent(Search_activity.this,Menu_search.class);
+    Bundle bundle = new Bundle();
+    bundle.putString("manufacture",manufacture);
+    bundle.putString("customer",customer);
+    bundle.putString("online_date",online_date);
+    bundle.putString("sale_order",sale_order);
+    bundle.putString("token",token);
+    bundle.putString("routing_level",routing_level);
+    bundle.putString("org_id",org_id);
+    menu.putExtras(bundle);
+    startActivity(menu);
 }
 }

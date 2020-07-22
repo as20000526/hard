@@ -27,6 +27,6 @@ public interface ApiService {
     @GET("get-now-manufacture")
     Call<List<LoginModel>>getsearch(@Query("manufacture" )String manufacture,@Query("customer")String customer,
                                     @Query("online_date" )String online_date,@Query("sale_order")String sale_order,
-                                    @Query("token" )String token,@Query("routing_level")String routing_level,
+                                    @Query("token" )String token,@Query("routing_level") String routing_level,
                                     @Query("org_id" )String org_id);
 }

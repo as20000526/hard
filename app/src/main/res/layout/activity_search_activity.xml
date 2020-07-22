@@ -36,7 +36,7 @@
                 app:layout_constraintTop_toTopOf="@+id/made_spinner" />
 
             <Spinner
-                android:entries="@array/spingarr"
+
                 android:id="@+id/made_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
