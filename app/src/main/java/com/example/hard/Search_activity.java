@@ -1,7 +1,6 @@
 package com.example.hard;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -45,13 +44,14 @@ public class Search_activity extends AppCompatActivity implements View.OnClickLi
     List<LoginModel> number =new ArrayList<>();
     List<LoginModel> on_customer =new ArrayList<>();
     List<LoginModel> facture =new ArrayList<>();
-    private RecyclerView recyclerView_list;
+    AlertDialog.Builder dialog_list;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_activity);
-        recyclerView_list=findViewById(R.id.recyclerView);
+        dialog_list = new AlertDialog.Builder(Search_activity.this,0);
         spingarr=findViewById(R.id.made_spinner);
         online_datebt=findViewById(R.id.online_date);
         online_number=findViewById(R.id.online_number);
@@ -160,7 +160,7 @@ private void gotonumber(){
                        test.add(zzz.getSo_id());
                    }
 
-                   recyclerView_list.setItems(test.toArray(new String[number.size()]), new DialogInterface.OnClickListener() {
+                   dialog_list.setItems(test.toArray(new String[number.size()]), new DialogInterface.OnClickListener() {
                        @Override
                        public void onClick(DialogInterface dialogInterface, int i) {
                            ednumber.setText(number.get(i).getSo_id());
@@ -168,7 +168,7 @@ private void gotonumber(){
                        }
                    });
 
-
+                   dialog_list.create().show();
                    test.clear();
 
                }

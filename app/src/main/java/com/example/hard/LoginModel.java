@@ -22,7 +22,7 @@ public class LoginModel {
     public String getmo_id(){return mo_id;}
 
 
-    public String item_id(){return item_id;}
-    public String online_date(){return online_date;}
-    public int qty(){return qty;}
+    public String getitem_id(){return item_id;}
+    public String getonline_date(){return online_date;}
+    public int getqty(){return qty;}
 }
